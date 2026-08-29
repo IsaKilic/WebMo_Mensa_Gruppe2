@@ -1,0 +1,8 @@
+# Diese Datei nach "datenbank.properties" kopieren und ausfuellen.
+# Die ausgefuellte Datei gehoert NICHT ins Repository.
+#
+# Ablage: src/datenbank.properties, damit sie im Classpath landet.
+
+db.url=jdbc:mysql://localhost:3306/mensa?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Europe/Berlin
+db.benutzer=mensa_app
+db.passwort=HIER_EUER_PASSWORT

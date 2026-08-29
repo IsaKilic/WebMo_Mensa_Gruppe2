@@ -1,0 +1,65 @@
+# ===========================================================
+# Zugangsdaten - NIEMALS ins Repository
+# ===========================================================
+datenbank.properties
+*.env
+secrets.plist
+
+# ===========================================================
+# Java / Eclipse
+# ===========================================================
+*.class
+*.war
+*.jar
+bin/
+build/
+target/
+.classpath
+.project
+.settings/
+.apt_generated/
+.factorypath
+
+# IntelliJ, falls jemand das nutzt
+.idea/
+*.iml
+out/
+
+# ===========================================================
+# Xcode / iOS
+# ===========================================================
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+DerivedData/
+build/
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+Packages/
+Package.resolved
+
+# CocoaPods, falls ihr es einsetzt
+Pods/
+
+# ===========================================================
+# Betriebssystem
+# ===========================================================
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+desktop.ini
+
+# ===========================================================
+# Editoren
+# ===========================================================
+.vscode/
+*.swp
+*~
