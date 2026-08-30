@@ -1,94 +1,60 @@
--- ---------------------------------------------------------------
--- Mensa-Projekt: Datenbankschema fuer MySQL 8
---
--- Ausfuehren mit:
---   mysql -u root -p < 01_schema.sql
--- ---------------------------------------------------------------
+-- Schema fuer MySQL 8, abgeleitet aus der Aufgabenstellung.
 
 CREATE DATABASE IF NOT EXISTS mensa
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci;
-
+    CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE mensa;
 
--- Reihenfolge beim Loeschen ist wichtig: Kindtabellen zuerst.
-DROP TABLE IF EXISTS gericht_kennzeichnung;
-DROP TABLE IF EXISTS gericht_zusatzstoff;
-DROP TABLE IF EXISTS gericht_allergen;
-DROP TABLE IF EXISTS gericht;
-DROP TABLE IF EXISTS speiseplan;
-DROP TABLE IF EXISTS mensa;
+DROP TABLE IF EXISTS essensbewertung;
+DROP TABLE IF EXISTS essensplan_essen;
+DROP TABLE IF EXISTS essensplan;
+DROP TABLE IF EXISTS essen;
+DROP TABLE IF EXISTS benutzer;
 
-CREATE TABLE mensa (
+CREATE TABLE benutzer (
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    benutzername  VARCHAR(50)  NOT NULL UNIQUE,
+    passwort_hash VARCHAR(255) NOT NULL,
+    rolle         VARCHAR(10)  NOT NULL DEFAULT 'USER'
+) ENGINE=InnoDB;
+
+CREATE TABLE essen (
+    id    INT AUTO_INCREMENT PRIMARY KEY,
+    name  VARCHAR(200)  NOT NULL,
+    preis DECIMAL(5,2)  NOT NULL,
+    art   VARCHAR(20)   NOT NULL   -- VEGETARISCH | VEGAN | MIT_FLEISCH
+) ENGINE=InnoDB;
+
+CREATE TABLE essensplan (
     id           INT AUTO_INCREMENT PRIMARY KEY,
-    name         VARCHAR(100)  NOT NULL,
-    adresse      VARCHAR(200),
-    breitengrad  DOUBLE,
-    laengengrad  DOUBLE
+    wochennummer INT NOT NULL UNIQUE
 ) ENGINE=InnoDB;
 
-CREATE TABLE speiseplan (
-    id        INT AUTO_INCREMENT PRIMARY KEY,
-    mensa_id  INT  NOT NULL,
-    datum     DATE NOT NULL,
-    CONSTRAINT fk_speiseplan_mensa
-        FOREIGN KEY (mensa_id) REFERENCES mensa(id)
-        ON DELETE CASCADE,
-    -- Pro Mensa und Tag darf es nur einen Speiseplan geben.
-    -- Diese Bedingung braucht der Importer fuer ON DUPLICATE KEY UPDATE.
-    CONSTRAINT uq_speiseplan_mensa_datum UNIQUE (mensa_id, datum)
+-- EssenProWoche: pro Plan und Wochentag genau ein Essen.
+-- Der Primaerschluessel (essensplan_id, wochentag) erzwingt genau das.
+CREATE TABLE essensplan_essen (
+    essensplan_id INT         NOT NULL,
+    wochentag     VARCHAR(12) NOT NULL,  -- MONTAG .. FREITAG
+    essen_id      INT         NOT NULL,
+    PRIMARY KEY (essensplan_id, wochentag),
+    CONSTRAINT fk_epe_plan  FOREIGN KEY (essensplan_id)
+        REFERENCES essensplan(id) ON DELETE CASCADE,
+    CONSTRAINT fk_epe_essen FOREIGN KEY (essen_id)
+        REFERENCES essen(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- Preis und Naehrwerte liegen flach in dieser Tabelle (Embedded Value Object).
--- Eigene Tabellen waeren bei einer echten 1:1-Beziehung nur unnoetige Joins.
-CREATE TABLE gericht (
-    id                 INT AUTO_INCREMENT PRIMARY KEY,
-    speiseplan_id      INT          NOT NULL,
-    name               VARCHAR(200) NOT NULL,
-    kategorie          VARCHAR(30)  NOT NULL DEFAULT 'SONSTIGES',
-
-    preis_studierende  DECIMAL(5,2),
-    preis_bedienstete  DECIMAL(5,2),
-    preis_gaeste       DECIMAL(5,2),
-
-    kilojoule          INT,
-    kilokalorien       INT,
-    fett               DECIMAL(6,1),
-    kohlenhydrate      DECIMAL(6,1),
-    eiweiss            DECIMAL(6,1),
-    salz               DECIMAL(6,2),
-
-    CONSTRAINT fk_gericht_speiseplan
-        FOREIGN KEY (speiseplan_id) REFERENCES speiseplan(id)
-        ON DELETE CASCADE
+CREATE TABLE essensbewertung (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    essen_id    INT       NOT NULL,
+    benutzer_id INT       NOT NULL,
+    sterne      TINYINT   NOT NULL,
+    text        TEXT      NOT NULL,          -- Bewertungstext ist Pflicht
+    foto_pfad   VARCHAR(255),
+    zeitpunkt   DATETIME  NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_bew_essen    FOREIGN KEY (essen_id)
+        REFERENCES essen(id) ON DELETE CASCADE,
+    CONSTRAINT fk_bew_benutzer FOREIGN KEY (benutzer_id)
+        REFERENCES benutzer(id) ON DELETE CASCADE,
+    CONSTRAINT ck_sterne CHECK (sterne BETWEEN 1 AND 5)
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_gericht_speiseplan ON gericht (speiseplan_id);
-
--- n:m-Zuordnungen. Die Werte entsprechen exakt den Java-Enum-Konstanten.
-CREATE TABLE gericht_allergen (
-    gericht_id INT         NOT NULL,
-    allergen   VARCHAR(30) NOT NULL,
-    PRIMARY KEY (gericht_id, allergen),
-    CONSTRAINT fk_ga_gericht
-        FOREIGN KEY (gericht_id) REFERENCES gericht(id)
-        ON DELETE CASCADE
-) ENGINE=InnoDB;
-
-CREATE TABLE gericht_zusatzstoff (
-    gericht_id  INT         NOT NULL,
-    zusatzstoff VARCHAR(30) NOT NULL,
-    PRIMARY KEY (gericht_id, zusatzstoff),
-    CONSTRAINT fk_gz_gericht
-        FOREIGN KEY (gericht_id) REFERENCES gericht(id)
-        ON DELETE CASCADE
-) ENGINE=InnoDB;
-
-CREATE TABLE gericht_kennzeichnung (
-    gericht_id    INT         NOT NULL,
-    kennzeichnung VARCHAR(30) NOT NULL,
-    PRIMARY KEY (gericht_id, kennzeichnung),
-    CONSTRAINT fk_gk_gericht
-        FOREIGN KEY (gericht_id) REFERENCES gericht(id)
-        ON DELETE CASCADE
-) ENGINE=InnoDB;
+CREATE INDEX idx_bew_essen ON essensbewertung (essen_id);
