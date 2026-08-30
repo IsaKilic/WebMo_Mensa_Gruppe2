@@ -1,68 +1,106 @@
 # Mensa-Projekt
 
-Native iOS-App und Website fuer die Mensa der Leuphana Universitaet Lueneburg.
-Semesterprojekt im Kurs Web- und mobile Anwendungssysteme bei Thomas Slotos.
+Native iOS-App und Angular-Webanwendung fuer einen Mensa-Essensplan.
+Pruefungsleistung im Kurs "Web- und mobile Anwendungsentwicklung" bei
+Thomas Slotos, Leuphana Universitaet Lueneburg.
+
+Umgesetzt wird **Alternative 1**: JavaScript Web-Framework plus native App.
 
 ## Team
 
 | Rolle | Person | Bereich |
 |---|---|---|
-| A | *(Name eintragen)* | Model und Persistenz |
-| A | *(Name eintragen)* | Datenbank und JDBC |
-| B | *(Name eintragen)* | Service-Schicht |
-| B | *(Name eintragen)* | REST-Endpunkte |
-| C | *(spaeter)* | iOS-App |
-| D | *(spaeter)* | Website |
+| A | *(Name)* | Model und Persistenz |
+| A | *(Name)* | Datenbank und JDBC |
+| B | *(Name)* | Service-Schicht |
+| B | *(Name)* | REST-Endpunkte |
+
+Ab Woche 2 arbeiten alle vier an den beiden Frontends.
 
 ## Aufbau
 
-    backend/     Java-Backend. Enthaelt Model, DAO, Service, REST-Endpunkte
-                 UND die Website (JSP/JSTL) - alles ein Eclipse-Projekt,
-                 alles eine WAR-Datei.
+    backend/     Java: Model, DAO, Service, REST-Endpunkte. Reine API,
+                 kein JSP - die Aufgabenstellung verlangt fuer die
+                 Web-Anwendung ein JavaScript-Framework.
+    web-app/     Angular-Projekt.
     ios-app/     Xcode-Projekt, Swift.
-    docs/        API-Notizen, Diagramme, Abgabedokumente.
+    docs/        Diagramme, Notizen, Abgabedokumente.
 
 ## Architektur
 
-Die App spricht ueber REST/JSON mit dem Backend, die Website wird
-serverseitig mit JSP und JSTL gerendert. Beide teilen sich Service-Schicht,
-Model und Datenbank.
+Beide Frontends sprechen ueber dieselbe REST-Schnittstelle mit dem
+Backend. Die Model-Daten liegen auf dem Server, wie in der
+Aufgabenstellung gefordert.
 
-    iOS-App  ──JSON──>  REST-Endpunkte  ─┐
-                                          ├─> Service ─> DAO ─> MySQL
-    Browser  ──HTML──>  Servlets + JSP  ──┘
+    Angular-Webanwendung  ──JSON──┐
+                                   ├──> REST ──> Service ──> DAO ──> MySQL
+    iOS-App               ──JSON──┘
 
-In der Terminologie der Vorlesung: die Website ist die klassische
-Server-MVC-Variante, die App die Variante "remote Model".
+In der Terminologie der Vorlesung: beide Clients realisieren die
+MVC-Variante "remote Model" - View und Controller liegen beim Client,
+das Model auf dem Server. Die Web-Anwendung ist eine SPA mit
+Client-Side-Rendering.
 
 ## Technik
 
 - Java 17, Jakarta EE, Apache Tomcat 11
+- Jakarta REST (JAX-RS) mit Jackson fuer JSON
 - MySQL 8, Zugriff ueber JDBC (kein JPA)
-- JSP und JSTL 2.0 fuer die Website
-- Swift und Xcode fuer die App
-- Datenquelle: offizielle API des Studentenwerks unter api.stw-on.de
+- Angular mit TypeScript
+- Swift und Xcode
+
+Angular deshalb, weil es in der Vorlesung behandelt wurde und TypeScript
+mit Klassen, Interfaces und Dependency Injection nah an Java liegt.
+Routing, Formulare, HTTP-Client und Internationalisierung sind
+mitgeliefert und muessen nicht einzeln zusammengesucht werden.
+
+## Fachklassen
+
+    Essen             Name, Preis, Art (vegetarisch | vegan | mit Fleisch)
+    Essensplan        Wochennummer, EssenProWoche (5 Essen Mo-Fr)
+    Essensbewertung   Foto, Bewertung 1-5, Bewertungstext
+    Benutzer          Benutzername, Passwort, Rolle (USER | ADMIN)
+
+Der Datenbestand umfasst 8 Essensplaene und 10 Essen.
+
+## Anforderungen aus der Aufgabenstellung
+
+- [ ] Essen: Anlegen, Aendern, Anzeigen, Loeschen
+- [ ] Essensplan: Anlegen, Aendern, Anzeigen, Loeschen
+- [ ] Essensplan: Essen anzeigen, hinzufuegen, aendern, entfernen
+- [ ] Essensplan: Filtern nach Woche
+- [ ] Essensbewertung: Abgeben und Aendern
+- [ ] Essensbewertung: 5-skalig als Sterne oder Dropdown
+- [ ] Essensbewertung: Bewertungstext ist Pflicht
+- [ ] Foto **aus der Anwendung heraus** mit der Kamera aufnehmen.
+      Ein vorher aufgenommenes Bild hochzuladen ist ausdruecklich
+      nicht erlaubt
+- [ ] Vier Dialoge: Essen, Essensplan, Essensbewertung, Login
+- [ ] Login mit Username und Passwort
+- [ ] Admin: alle Funktionen. User: nur Bewertungen anlegen,
+      sonst lesender Zugriff
+- [ ] Internationalisierung deutsch und englisch
+- [ ] 8 Essensplaene, 10 Essen
+
+Abgabe: Upload in myStudy bis 21.09.2026.
+Muendliches Gespraech in der letzten Septemberwoche. Jedes
+Gruppenmitglied muss sich mit allen verwendeten Technologien auskennen.
 
 ## Loslegen
 
-Siehe `backend/README.md` fuer die Einrichtung von Eclipse, MySQL und
+`backend/README.md` beschreibt die Einrichtung von Eclipse, MySQL und
 den Zugangsdaten.
 
 ## Branches
 
-    main            immer lauffaehig, hier wird nicht direkt entwickelt
+    main            immer lauffaehig
     feature/<name>  ein Branch pro Aufgabe
 
-Beispiele: `feature/jdbc-dao`, `feature/rest-endpunkte`,
-`feature/stw-importer`, `feature/jsp-tagesplan`.
-
-Ablauf: Branch von `main` abzweigen, arbeiten, Pull Request aufmachen,
-jemand aus einem anderen Bereich schaut drueber, dann mergen.
-Das Review ueber Bereichsgrenzen hinweg ist Absicht - am Ende muessen
-alle vier die gesamte Architektur erklaeren koennen.
+Pull Request aufmachen, jemand aus einem anderen Bereich schaut drueber,
+dann mergen. Das Review ueber Bereichsgrenzen hinweg ist Absicht - im
+muendlichen Gespraech werden alle vier zu allem gefragt.
 
 ## Wichtig
 
 `datenbank.properties` steht in `.gitignore` und darf nie committet
-werden. Wer sie versehentlich pusht, muss das Passwort aendern - aus der
-Git-Historie bekommt man sie nur mit Aufwand wieder heraus.
+werden.

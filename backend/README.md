@@ -1,94 +1,104 @@
-# Mensa-Projekt — Backend (Rolle A)
+# Backend
 
-Grundgeruest der Model- und Persistenzschicht fuer die Mensa-Anwendung.
-Web- und mobile Anwendungssysteme, Leuphana Universitaet Lueneburg.
+Java-Backend fuer das Mensa-Projekt: Model, Persistenz, Service und
+REST-Endpunkte. Liefert ausschliesslich JSON - die Web-Anwendung ist ein
+eigenstaendiges Angular-Projekt unter `../web-app/`.
 
-## Was hier schon fertig ist
+## Stand
+
+Fertig:
 
 - Model-Klassen und Enums (`de.leuphana.mensa.model`)
-- DAO-Interfaces (`de.leuphana.mensa.persistence`)
-- In-Memory-Implementierung mit Testdaten fuer 10 Tage
-- MySQL-Schema (`sql/01_schema.sql`, `sql/02_stammdaten.sql`)
-- ConnectionFactory fuer JDBC
+- DAO-Interfaces mit vollem CRUD (`de.leuphana.mensa.persistence`)
+- In-Memory-Implementierungen mit 10 Essen und 8 Essensplaenen
+- MySQL-Schema (`sql/01_schema.sql`)
+- `ConnectionFactory` fuer JDBC
 
-## Was noch fehlt
+Offen:
 
-- `MensaDAOJdbc` und `SpeiseplanDAOJdbc`
-- Importer fuer die API unter api.stw-on.de
-- Service-Schicht und REST-Endpunkte (Rolle B)
+- JDBC-Implementierungen der vier DAOs
+- Passwort-Hashing (aktuell Klartext in `BenutzerDAOInMemory`)
+- Service-Schicht und REST-Endpunkte
+- Foto-Ablage: Datei im Dateisystem, Pfad in der Datenbank
+
+## Klassen
+
+    model/
+      Essen                 Name, Preis, Art
+      Essensplan            Wochennummer, EnumMap<Wochentag, Essen>
+      Essensbewertung       Sterne 1-5, Text, Fotopfad
+      Benutzer              Benutzername, Passworthash, Rolle
+      Art                   VEGETARISCH | VEGAN | MIT_FLEISCH
+      Wochentag             MONTAG .. FREITAG
+      Rolle                 USER | ADMIN
+
+    persistence/
+      EssenDAO              anlegen, aendern, findById, findAlle, loeschen
+      EssensplanDAO         dito, plus findByWoche
+      EssensbewertungDAO    abgeben, aendern, findByEssen, durchschnitt
+      BenutzerDAO           findByBenutzername, findById
 
 ## Einrichtung
 
-### 1. Projekt in Eclipse
+### Eclipse
 
-Neues Dynamic Web Project anlegen, `src` als Source Folder eintragen,
-den Inhalt dieses Ordners hineinkopieren.
+Dynamic Web Project anlegen, `src` als Source Folder eintragen.
 
-### 2. MySQL
+### MySQL
 
     mysql -u root -p < sql/01_schema.sql
-    mysql -u root -p < sql/02_stammdaten.sql
 
-Danach einen eigenen Benutzer anlegen, nicht mit root arbeiten:
+Eigenen Benutzer anlegen, nicht mit root arbeiten:
 
     CREATE USER 'mensa_app'@'localhost' IDENTIFIED BY 'EUER_PASSWORT';
     GRANT SELECT, INSERT, UPDATE, DELETE ON mensa.* TO 'mensa_app'@'localhost';
     FLUSH PRIVILEGES;
 
-### 3. Zugangsdaten
+### Zugangsdaten
 
 `datenbank.properties.vorlage` nach `src/datenbank.properties` kopieren
-und ausfuellen. Diese Datei steht in `.gitignore` und darf nicht ins
-Repository — sonst liegen eure Passwoerter oeffentlich auf GitHub.
+und ausfuellen. Steht in `.gitignore` und darf nicht ins Repository.
 
-### 4. JDBC-Treiber
+### JDBC-Treiber
 
-MySQL Connector/J herunterladen und in `WebContent/WEB-INF/lib` legen,
-danach in Eclipse dem Build Path hinzufuegen.
+MySQL Connector/J herunterladen, nach `WebContent/WEB-INF/lib` legen und
+in Eclipse dem Build Path hinzufuegen.
 
 ## Fuer Rolle B
 
-Ihr programmiert ausschliesslich gegen die Interfaces `MensaDAO` und
-`SpeiseplanDAO`. Zum Starten:
+Ihr programmiert gegen die Interfaces, nicht gegen die
+JDBC-Implementierungen. Damit koennt ihr sofort starten:
 
-    MensaDAO mensaDAO = new MensaDAOInMemory();
-    SpeiseplanDAO planDAO = new SpeiseplanDAOInMemory(mensaDAO);
+    EssenDAO essenDAO = new EssenDAOInMemory();
+    EssensplanDAO planDAO = new EssensplanDAOInMemory(essenDAO);
+    EssensbewertungDAO bewDAO = new EssensbewertungDAOInMemory();
+    BenutzerDAO benDAO = new BenutzerDAOInMemory();
 
-    Speiseplan heute = planDAO.findByMensaUndDatum(1, LocalDate.now());
-    List<Gericht> vegan = heute.filter(EnumSet.of(Kennzeichnung.VEGAN), null);
+    Essensplan kw3 = planDAO.findByWoche(3);
+    Essen montag = kw3.getEssen(Wochentag.MONTAG);
+    double schnitt = bewDAO.durchschnittFuerEssen(montag.getId());
 
-Sobald die JDBC-Implementierung fertig ist, tauschen wir nur die beiden
-`new`-Aufrufe aus. Euer Code aendert sich nicht.
+Testbenutzer: `admin` / `admin123` und `user` / `user123`.
 
-## Wichtige Designentscheidungen
+Sobald die JDBC-Implementierungen stehen, tauschen wir nur die
+`new`-Aufrufe. Euer Code aendert sich nicht.
 
-**Preis und Naehrwerte sind eigene Klassen (Value Objects), liegen in der
-Datenbank aber flach in der Tabelle `gericht`.** Bei einer echten
-1:1-Beziehung waeren eigene Tabellen nur unnoetige Joins.
+## Designentscheidungen
 
-**Allergene, Zusatzstoffe und Kennzeichnungen sind Enums.** Die Liste der
-14 Allergene ist gesetzlich festgelegt und aendert sich nicht. Enums geben
-Typsicherheit und machen Tippfehler unmoeglich.
+**Essensplan haelt eine `EnumMap<Wochentag, Essen>`, keine Liste.**
+Die Aufgabe verlangt genau fuenf Essen fuer Montag bis Freitag. Eine
+Liste koennte drei oder sieben Eintraege haben, die EnumMap nicht.
 
-**Kennzeichnung und Allergen sind getrennt.** "vegan" ist ein
-Wunschkriterium, "Senf" ein Ausschlusskriterium — die Filterlogik
-behandelt beide unterschiedlich.
-
-**Speiseplan ist mehr als eine Liste.** Filtern und Gruppieren liegt dort,
-nicht im Servlet oder in der JSP. Sonst muessten Website und App dieselbe
-Logik doppelt implementieren.
+**`Art` ist ein einzelner Wert, kein Set.** Ein Essen ist vegetarisch
+ODER vegan ODER mit Fleisch, nicht mehreres gleichzeitig.
 
 **Die DAO-Schicht wirft `DAOException`, nie `SQLException`.** Die
 Service-Schicht soll nicht wissen, dass darunter eine relationale
 Datenbank liegt.
 
-## Datenquelle
+**Preis und Naehrwerte flach in der Tabelle.** Bei echten
+1:1-Beziehungen waeren eigene Tabellen nur unnoetige Joins.
 
-Nicht scrapen. Das Studentenwerk OstNiedersachsen betreibt eine offizielle
-API unter api.stw-on.de, dokumentiert unter github.com/stw-on/api-docs.
-stw-on.de selbst untersagt automatisierten Zugriff per robots.txt und
-liefert die Plaene ohnehin nur als PDF.
-
-Die API ist ratenbegrenzt: bei HTTP 429 den `Retry-After`-Header beachten.
-Der Importer soll periodisch laufen und in die Datenbank schreiben — nicht
-bei jedem Request der App.
+**Bewertungstext wird in `istGueltig()` geprueft.** Laut Aufgabe ist er
+verpflichtend, also darf eine Bewertung ohne Text nicht gespeichert
+werden.
