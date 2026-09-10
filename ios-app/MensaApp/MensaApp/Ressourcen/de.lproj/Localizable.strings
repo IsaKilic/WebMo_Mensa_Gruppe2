@@ -1,39 +1,33 @@
-/* Arten */
-"art.vegetarisch" = "vegetarisch";
-"art.vegan" = "vegan";
+"allgemein.abbrechen" = "Abbrechen";
+"allgemein.erneut_versuchen" = "Erneut versuchen";
+"allgemein.kein_essen" = "Kein Essen eingetragen";
+"allgemein.loeschen" = "Löschen";
+"allgemein.speichern" = "Speichern";
 "art.mit_fleisch" = "mit Fleisch";
-
-/* Wochentage */
-"wochentag.montag" = "Montag";
-"wochentag.dienstag" = "Dienstag";
-"wochentag.mittwoch" = "Mittwoch";
-"wochentag.donnerstag" = "Donnerstag";
-"wochentag.freitag" = "Freitag";
-
-/* Fehler */
-"fehler.nicht_angemeldet" = "Bitte zuerst anmelden.";
-"fehler.keine_berechtigung" = "Dafür fehlt die Berechtigung.";
-"fehler.nicht_gefunden" = "Nicht gefunden.";
-"fehler.datei_zu_gross" = "Das Foto ist zu groß.";
-"fehler.keine_verbindung" = "Keine Verbindung zum Server.";
-"fehler.ungueltige_antwort" = "Unerwartete Antwort vom Server.";
-
-/* Anmeldung */
-"login.titel" = "Anmelden";
-"login.benutzername" = "Benutzername";
-"login.passwort" = "Passwort";
-"login.knopf" = "Anmelden";
-"login.abmelden" = "Abmelden";
-
-/* Allgemein */
-"essen.titel" = "Essen";
-"essensplan.titel" = "Essensplan";
-"bewertung.titel" = "Bewertung";
+"art.vegan" = "vegan";
+"art.vegetarisch" = "vegetarisch";
+"bewertung.absenden" = "Absenden";
+"bewertung.foto_aufnehmen" = "Foto aufnehmen";
 "bewertung.sterne" = "Bewertung";
 "bewertung.text" = "Kommentar";
-"bewertung.foto_aufnehmen" = "Foto aufnehmen";
-"bewertung.absenden" = "Absenden";
-"allgemein.abbrechen" = "Abbrechen";
-"allgemein.speichern" = "Speichern";
-"allgemein.loeschen" = "Löschen";
-"allgemein.kein_essen" = "Kein Essen eingetragen";
+"bewertung.titel" = "Bewertung";
+"essen.titel" = "Essen";
+"essensplan.titel" = "Essensplan";
+"fehler.datei_zu_gross" = "Das Foto ist zu groß.";
+"fehler.keine_berechtigung" = "Dafür fehlt die Berechtigung.";
+"fehler.keine_verbindung" = "Keine Verbindung zum Server.";
+"fehler.nicht_angemeldet" = "Bitte zuerst anmelden.";
+"fehler.nicht_gefunden" = "Nicht gefunden.";
+"fehler.ungueltige_antwort" = "Unerwartete Antwort vom Server.";
+"login.abmelden" = "Abmelden";
+"login.benutzername" = "Benutzername";
+"login.falsche_daten" = "Benutzername oder Passwort ist falsch.";
+"login.felder_leer" = "Bitte Benutzername und Passwort eingeben.";
+"login.knopf" = "Anmelden";
+"login.passwort" = "Passwort";
+"login.titel" = "Anmelden";
+"wochentag.dienstag" = "Dienstag";
+"wochentag.donnerstag" = "Donnerstag";
+"wochentag.freitag" = "Freitag";
+"wochentag.mittwoch" = "Mittwoch";
+"wochentag.montag" = "Montag";

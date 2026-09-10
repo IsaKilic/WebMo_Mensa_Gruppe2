@@ -1,39 +1,33 @@
-/* Arten */
-"art.vegetarisch" = "vegetarian";
-"art.vegan" = "vegan";
+"allgemein.abbrechen" = "Cancel";
+"allgemein.erneut_versuchen" = "Try again";
+"allgemein.kein_essen" = "No meal scheduled";
+"allgemein.loeschen" = "Delete";
+"allgemein.speichern" = "Save";
 "art.mit_fleisch" = "with meat";
-
-/* Wochentage */
-"wochentag.montag" = "Monday";
-"wochentag.dienstag" = "Tuesday";
-"wochentag.mittwoch" = "Wednesday";
-"wochentag.donnerstag" = "Thursday";
-"wochentag.freitag" = "Friday";
-
-/* Fehler */
-"fehler.nicht_angemeldet" = "Please sign in first.";
-"fehler.keine_berechtigung" = "You are not allowed to do that.";
-"fehler.nicht_gefunden" = "Not found.";
-"fehler.datei_zu_gross" = "The photo is too large.";
-"fehler.keine_verbindung" = "Cannot reach the server.";
-"fehler.ungueltige_antwort" = "Unexpected response from server.";
-
-/* Anmeldung */
-"login.titel" = "Sign in";
-"login.benutzername" = "Username";
-"login.passwort" = "Password";
-"login.knopf" = "Sign in";
-"login.abmelden" = "Sign out";
-
-/* Allgemein */
-"essen.titel" = "Meals";
-"essensplan.titel" = "Menu plan";
-"bewertung.titel" = "Review";
+"art.vegan" = "vegan";
+"art.vegetarisch" = "vegetarian";
+"bewertung.absenden" = "Submit";
+"bewertung.foto_aufnehmen" = "Take photo";
 "bewertung.sterne" = "Rating";
 "bewertung.text" = "Comment";
-"bewertung.foto_aufnehmen" = "Take photo";
-"bewertung.absenden" = "Submit";
-"allgemein.abbrechen" = "Cancel";
-"allgemein.speichern" = "Save";
-"allgemein.loeschen" = "Delete";
-"allgemein.kein_essen" = "No meal scheduled";
+"bewertung.titel" = "Review";
+"essen.titel" = "Meals";
+"essensplan.titel" = "Menu plan";
+"fehler.datei_zu_gross" = "The photo is too large.";
+"fehler.keine_berechtigung" = "You are not allowed to do that.";
+"fehler.keine_verbindung" = "Cannot reach the server.";
+"fehler.nicht_angemeldet" = "Please sign in first.";
+"fehler.nicht_gefunden" = "Not found.";
+"fehler.ungueltige_antwort" = "Unexpected response from server.";
+"login.abmelden" = "Sign out";
+"login.benutzername" = "Username";
+"login.falsche_daten" = "Username or password is incorrect.";
+"login.felder_leer" = "Please enter username and password.";
+"login.knopf" = "Sign in";
+"login.passwort" = "Password";
+"login.titel" = "Sign in";
+"wochentag.dienstag" = "Tuesday";
+"wochentag.donnerstag" = "Thursday";
+"wochentag.freitag" = "Friday";
+"wochentag.mittwoch" = "Wednesday";
+"wochentag.montag" = "Monday";
