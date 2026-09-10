@@ -1,0 +1,39 @@
+/* Arten */
+"art.vegetarisch" = "vegetarisch";
+"art.vegan" = "vegan";
+"art.mit_fleisch" = "mit Fleisch";
+
+/* Wochentage */
+"wochentag.montag" = "Montag";
+"wochentag.dienstag" = "Dienstag";
+"wochentag.mittwoch" = "Mittwoch";
+"wochentag.donnerstag" = "Donnerstag";
+"wochentag.freitag" = "Freitag";
+
+/* Fehler */
+"fehler.nicht_angemeldet" = "Bitte zuerst anmelden.";
+"fehler.keine_berechtigung" = "Dafür fehlt die Berechtigung.";
+"fehler.nicht_gefunden" = "Nicht gefunden.";
+"fehler.datei_zu_gross" = "Das Foto ist zu groß.";
+"fehler.keine_verbindung" = "Keine Verbindung zum Server.";
+"fehler.ungueltige_antwort" = "Unerwartete Antwort vom Server.";
+
+/* Anmeldung */
+"login.titel" = "Anmelden";
+"login.benutzername" = "Benutzername";
+"login.passwort" = "Passwort";
+"login.knopf" = "Anmelden";
+"login.abmelden" = "Abmelden";
+
+/* Allgemein */
+"essen.titel" = "Essen";
+"essensplan.titel" = "Essensplan";
+"bewertung.titel" = "Bewertung";
+"bewertung.sterne" = "Bewertung";
+"bewertung.text" = "Kommentar";
+"bewertung.foto_aufnehmen" = "Foto aufnehmen";
+"bewertung.absenden" = "Absenden";
+"allgemein.abbrechen" = "Abbrechen";
+"allgemein.speichern" = "Speichern";
+"allgemein.loeschen" = "Löschen";
+"allgemein.kein_essen" = "Kein Essen eingetragen";
